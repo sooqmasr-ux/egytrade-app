@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#c9a84c"/>
+<meta name="description" content="EgyTrade OS — نظام التشغيل التجاري المصري الأول"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="EgyTrade OS"/>
+<link rel="manifest" href="#" id="manifest-link"/>
+<title>EgyTrade OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --gold:#c9a84c;--gold2:#f5d06e;--green:#22c55e;--blue:#3b82f6;
+  --purple:#a855f7;--red:#ef4444;--pink:#ec4899;--cyan:#06b6d4;--amber:#f59e0b;
+  --bg:#020810;--surface:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);
+  --text:#e2e8f0;--muted:#64748b;--dark:#334155;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Cairo',sans-serif}
+#app{height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+/* NAV */
+nav{
+  background:rgba(2,8,16,.98);border-bottom:1px solid rgba(201,168,76,.15);
+  padding:0 14px;display:flex;align-items:center;gap:8;height:52px;flex-shrink:0;
+  position:sticky;top:0;z-index:100;
+}
+.logo{display:flex;align-items:center;gap:8;cursor:pointer;text-decoration:none}
+.logo-icon{width:30px;height:30px;background:linear-gradient(135deg,#c9a84c,#8b6914);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-weight:900;color:#020810;font-size:15px}
+.logo-text{font-size:12px;font-weight:900;color:var(--gold);line-height:1}
+.logo-sub{font-size:7px;color:var(--muted);line-height:1}
+
+/* DISPATCH BANNER */
+#dispatch{
+  background:rgba(201,168,76,.06);border-bottom:1px solid rgba(201,168,76,.15);
+  padding:7px 14px;display:flex;align-items:center;gap:10;flex-shrink:0;overflow:hidden;
+}
+.dispatch-label{font-size:9px;font-weight:700;color:var(--amber);white-space:nowrap;display:flex;align-items:center;gap:5}
+.dispatch-scroll{display:flex;gap:14;overflow-x:auto;flex:1;scrollbar-width:none}
+.dispatch-scroll::-webkit-scrollbar{display:none}
+.dispatch-item{font-size:10px;white-space:nowrap}
+.dispatch-close{background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;flex-shrink:0;padding:0 4px}
+
+/* TABS */
+.tabs{
+  display:flex;overflow-x:auto;border-bottom:1px solid var(--border);
+  background:var(--bg);flex-shrink:0;scrollbar-width:none;padding:0 8px;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  border:none;background:transparent;color:var(--muted);
+  font-family:'Cairo',sans-serif;font-size:11px;cursor:pointer;
+  padding:10px 12px;white-space:nowrap;border-bottom:2px solid transparent;
+  transition:all .2s;
+}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:700}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;padding:20px 16px 80px;-webkit-overflow-scrolling:touch}
+.content::-webkit-scrollbar{width:3px}
+.content::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px}
+
+/* CARDS */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:16px;transition:all .25s;margin-bottom:12px;
+}
+.card-hover{cursor:pointer}
+.card-hover:active{transform:scale(.98);border-color:rgba(201,168,76,.3)}
+
+/* BUTTONS */
+.btn{border:none;cursor:pointer;font-family:'Cairo',sans-serif;border-radius:10px;transition:all .2s;font-weight:700;padding:11px 20px;font-size:13px}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#020810}
+.btn-gold:active{transform:scale(.97)}
+.btn-outline{background:rgba(201,168,76,.12);color:var(--gold);border:1px solid rgba(201,168,76,.3)}
+.btn-outline:active{background:rgba(201,168,76,.22)}
+.btn-pink{background:linear-gradient(135deg,#ec4899,#f472b6);color:#020810}
+.btn-sm{padding:7px 14px;font-size:11px;border-radius:8px}
+
+/* INPUTS */
+.inp{
+  background:rgba(255,255,255,.07);border:1px solid var(--border);
+  border-radius:10px;color:var(--text);font-family:'Cairo',sans-serif;
+  padding:11px 14px;width:100%;font-size:13px;transition:border-color .2s;
+}
+.inp:focus{outline:none;border-color:var(--gold)}
+.inp::placeholder{color:#475569}
+textarea.inp{resize:none;line-height:1.7}
+select.inp{cursor:pointer;appearance:none}
+
+/* GRADIENT TEXT */
+.g{background:linear-gradient(135deg,#c9a84c,#f5d06e);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+/* BADGE */
+.badge{display:inline-flex;align-items:center;gap:5px;background:rgba(201,168,76,.1);
+  border:1px solid rgba(201,168,76,.3);border-radius:100px;padding:4px 14px;
+  font-size:10px;color:var(--gold);margin-bottom:14px}
+
+/* STAT */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10;margin:16px 0}
+.stat{text-align:center}
+.stat-val{font-size:24px;font-weight:900;font-family:'Cairo',sans-serif}
+.stat-lbl{font-size:9px;color:var(--muted);margin-top:2px}
+
+/* MODULE GRID */
+.module-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10;margin-top:14px}
+.module{background:var(--surface);border-radius:12px;padding:14px;cursor:pointer;border:1px solid var(--border);transition:all .2s;position:relative;overflow:hidden}
+.module:active{transform:scale(.97)}
+.module-icon{font-size:24px;margin-bottom:6px}
+.module-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px}
+.module-desc{font-size:10px;color:var(--muted);line-height:1.5}
+
+/* CHIP */
+.chip{display:inline-block;border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.08);
+  color:var(--gold);border-radius:100px;cursor:pointer;padding:6px 12px;font-size:11px;
+  font-family:'Cairo',sans-serif;margin:3px;transition:all .2s}
+.chip:active{background:rgba(201,168,76,.22)}
+
+/* AI BOX */
+.ai-box{background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.2);border-radius:14px;padding:16px}
+.ai-header{display:flex;align-items:center;gap:8;margin-bottom:12px}
+.ai-icon{width:26px;height:26px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.ai-resp{white-space:pre-line;line-height:2;font-size:13px;color:#cbd5e1}
+.transparency{background:rgba(6,182,212,.06);border:1px solid rgba(6,182,212,.2);border-radius:9px;padding:10px 12px;margin-top:12px;font-size:10px;color:#67e8f9;line-height:1.9}
+
+/* AGENT LOG */
+.log-box{background:rgba(0,0,0,.5);border:1px solid rgba(34,197,94,.2);border-radius:12px;padding:14px;margin-bottom:14px}
+.log-item{padding:5px 10px;background:rgba(34,197,94,.06);border-radius:7px;margin-bottom:4px;font-size:11px;color:#86efac;border-right:2px solid var(--green)}
+
+/* CALC RESULT */
+.calc-box{background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.2);border-radius:14px;padding:16px}
+.calc-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.calc-total{display:flex;justify-content:space-between;padding:12px 0 0;border-top:1px solid rgba(201,168,76,.2);margin-top:6px}
+
+/* AGREEMENT CARD */
+.ag-card{border-radius:12px;padding:14px;margin-bottom:10px;border-left:3px solid}
+.ag-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.ag-pill{font-size:10px;padding:3px 10px;border-radius:100px;font-weight:700}
+
+/* GOV CARD */
+.gov-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8}
+.gov-card{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:12px;cursor:pointer;transition:all .2s}
+.gov-card.active{border-color:var(--gold);background:rgba(201,168,76,.07)}
+.gov-card:active{transform:scale(.97)}
+
+/* SKILL CARD */
+.skill-cmd{font-size:11px;font-weight:700;color:var(--green);font-family:monospace;margin-bottom:4px}
+
+/* INTEL */
+.intel-card{border-radius:12px;padding:14px;margin-bottom:10px;border-right:4px solid}
+
+/* SPINNER */
+.spinner{display:inline-block;width:12px;height:12px;border:2px solid;border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin-left:6px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* PULSE */
+.dot{width:6px;height:6px;border-radius:50%;display:inline-block;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* SECURITY BADGE */
+#sec-badge{
+  position:fixed;bottom:68px;left:10px;z-index:200;
+  display:flex;align-items:center;gap:5px;
+  background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);
+  border-radius:100px;padding:3px 9px;
+}
+#sec-badge span{font-size:8px;color:#4ade80;font-weight:700}
+
+/* BOTTOM NAV */
+#bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(2,8,16,.98);border-top:1px solid rgba(201,168,76,.12);
+  display:flex;padding:6px 0;z-index:100;
+  backdrop-filter:blur(20px);
+}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2;cursor:pointer;padding:4px 0;transition:all .2s}
+.bnav-icon{font-size:18px}
+.bnav-label{font-size:8px;color:var(--muted);font-family:'Cairo',sans-serif}
+.bnav-item.active .bnav-label{color:var(--gold)}
+.bnav-item.active .bnav-icon{filter:drop-shadow(0 0 4px var(--gold))}
+
+/* SECTION TITLE */
+.section-title{font-size:18px;font-weight:900;margin-bottom:6px}
+.section-sub{font-size:11px;color:var(--muted);margin-bottom:18px;line-height:1.7}
+
+/* SCROLL SUGGESTIONS */
+.suggestions{position:absolute;top:100%;left:0;right:0;background:#0d1929;border:1px solid var(--border);border-radius:10px;z-index:50;max-height:160px;overflow-y:auto}
+.suggestion{padding:8px 12px;font-size:12px;cursor:pointer;display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.04)}
+.suggestion:active{background:rgba(201,168,76,.08)}
+.inp-wrap{position:relative}
+
+/* SECTION TITLE MOBILE */
+h2{font-size:16px;font-weight:900}
+p{font-size:12px;color:var(--muted);line-height:1.8}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- SECURITY BADGE -->
+  <div id="sec-badge">
+    <div class="dot" style="background:#22c55e"></div>
+    <span>SECURED • 7 LAYERS</span>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo" onclick="goTab('home')">
+      <div class="logo-icon">E</div>
+      <div>
+        <div class="logo-text">EgyTrade OS</div>
+        <div class="logo-sub">TRADE INTELLIGENCE</div>
+      </div>
+    </div>
+    <div style="flex:1"></div>
+    <button class="btn btn-outline btn-sm" onclick="toggleLang()" style="padding:5px 12px;font-size:10px" id="lang-btn">EN</button>
+  </nav>
+
+  <!-- DISPATCH BANNER -->
+  <div id="dispatch">
+    <div class="dispatch-label">
+      <div class="dot" style="background:var(--amber)"></div>
+      <span id="dispatch-label">📡 إذاعة EgyTrade</span>
+    </div>
+    <div class="dispatch-scroll" id="dispatch-items"></div>
+    <button class="dispatch-close" onclick="document.getElementById('dispatch').style.display='none'">×</button>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs" id="tabs"></div>
+
+  <!-- CONTENT -->
+  <div class="content" id="content"></div>
+
+  <!-- BOTTOM NAV -->
+  <div id="bottom-nav" id="bottom-nav-el"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// SECURITY LAYER
+// ══════════════════════════════════════════
+const XSS=[/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,/javascript:/gi,/on\w+=/gi,/<iframe/gi,/eval\(/gi,/document\.cookie/gi];
+const ENC={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#x27;'};
+function sanitize(s,max=2000){if(!s)return'';let c=String(s);XSS.forEach(p=>{c=c.replace(p,'')});c=c.replace(/[&<>"']/g,ch=>ENC[ch]||ch);return c.trim().slice(0,max)}
+function validateNum(v,min=0,max=1e9){const n=parseFloat(v);return isFinite(n)&&n>=min&&n<=max?n:null}
+
+const _rl=new Map();
+function rateLimit(k,max,win){const now=Date.now();const ts=(_rl.get(k)||[]).filter(t=>t>now-win);_rl.set(k,ts);if(ts.length>=max)return{ok:false,retry:Math.ceil((ts[0]+win-now)/1000)};ts.push(now);return{ok:true}}
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+const STATE={
+  lang:'ar',tab:'home',
+  query:'',aiAnswer:'',aiLoading:false,
+  hsChapter:'',cifValue:'',destCountry:'',hsSearch:'',
+  activeGov:null,
+  agentTask:'',agentRunning:false,agentLog:[],
+  showSugg:false,
+  counter:{users:0,data:0,countries:0,opps:0},
+  transparency:null,
+};
+const isAR=()=>STATE.lang==='ar';
+
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const HS={
+  "01":{ar:"حيوانات حية",en:"Live Animals",d:5,v:14,g:false,vet:true,hal:true,phy:false},
+  "02":{ar:"لحوم ومنتجات الجزارة",en:"Meat & Offal",d:5,v:14,g:false,vet:true,hal:true,phy:false},
+  "03":{ar:"أسماك ومأكولات بحرية",en:"Fish & Seafood",d:5,v:14,g:false,vet:true,hal:false,phy:false},
+  "04":{ar:"ألبان وبيض وعسل",en:"Dairy, Eggs & Honey",d:10,v:14,g:false,vet:false,hal:true,phy:false},
+  "06":{ar:"نباتات حية وزهور",en:"Live Plants & Flowers",d:5,v:14,g:false,vet:false,hal:false,phy:true},
+  "07":{ar:"خضراوات",en:"Vegetables",d:5,v:14,g:false,vet:false,hal:false,phy:true},
+  "08":{ar:"فاكهة وقشريات",en:"Fruit & Nuts",d:5,v:14,g:false,vet:false,hal:false,phy:true},
+  "09":{ar:"قهوة وشاي وتوابل",en:"Coffee, Tea & Spices",d:10,v:14,g:false,vet:false,hal:false,phy:true},
+  "10":{ar:"حبوب وأرز",en:"Cereals & Rice",d:5,v:14,g:false,vet:false,hal:false,phy:true},
+  "15":{ar:"دهون وزيوت نباتية",en:"Fats & Oils",d:10,v:14,g:true,vet:false,hal:false,phy:false},
+  "17":{ar:"سكر ومنتجاته",en:"Sugar",d:20,v:14,g:true,vet:false,hal:false,phy:false},
+  "20":{ar:"خضار وفاكهة محفوظة",en:"Preserved Veg & Fruit",d:20,v:14,g:true,vet:false,hal:false,phy:false},
+  "22":{ar:"مشروبات",en:"Beverages",d:40,v:14,g:true,vet:false,hal:false,phy:false},
+  "25":{ar:"رخام وجرانيت وأملاح",en:"Marble, Granite & Salt",d:5,v:14,g:false,vet:false,hal:false,phy:false},
+  "27":{ar:"منتجات بترولية",en:"Petroleum Products",d:2,v:14,g:false,vet:false,hal:false,phy:false},
+  "30":{ar:"أدوية",en:"Pharmaceuticals",d:0,v:0,g:false,vet:false,hal:false,phy:false},
+  "32":{ar:"دهانات وأصباغ",en:"Paints & Dyes",d:15,v:14,g:true,vet:false,hal:false,phy:false},
+  "33":{ar:"عطور وتجميل",en:"Cosmetics",d:30,v:14,g:true,vet:false,hal:false,phy:false},
+  "39":{ar:"بلاستيك",en:"Plastics",d:20,v:14,g:true,vet:false,hal:false,phy:false},
+  "44":{ar:"خشب",en:"Wood",d:10,v:14,g:true,vet:false,hal:false,phy:true},
+  "52":{ar:"قطن وغزل ونسيج",en:"Cotton & Textiles",d:20,v:14,g:true,vet:false,hal:false,phy:false},
+  "57":{ar:"سجاد",en:"Carpets",d:30,v:14,g:true,vet:false,hal:false,phy:false},
+  "61":{ar:"ملابس محبوكة",en:"Knitted Garments",d:40,v:14,g:true,vet:false,hal:false,phy:false},
+  "62":{ar:"ملابس جاهزة",en:"Woven Garments",d:40,v:14,g:true,vet:false,hal:false,phy:false},
+  "64":{ar:"أحذية",en:"Footwear",d:40,v:14,g:true,vet:false,hal:false,phy:false},
+  "68":{ar:"مواد حجرية وإسمنتية",en:"Stone & Cement",d:10,v:14,g:true,vet:false,hal:false,phy:false},
+  "69":{ar:"سيراميك",en:"Ceramics",d:15,v:14,g:true,vet:false,hal:false,phy:false},
+  "70":{ar:"زجاج",en:"Glass",d:15,v:14,g:true,vet:false,hal:false,phy:false},
+  "72":{ar:"حديد وصلب",en:"Iron & Steel",d:10,v:14,g:true,vet:false,hal:false,phy:false},
+  "76":{ar:"ألومنيوم",en:"Aluminium",d:15,v:14,g:true,vet:false,hal:false,phy:false},
+  "84":{ar:"آلات ميكانيكية",en:"Machinery",d:10,v:14,g:true,vet:false,hal:false,phy:false},
+  "85":{ar:"أجهزة كهربائية",en:"Electronics",d:30,v:14,g:true,vet:false,hal:false,phy:false},
+  "87":{ar:"سيارات",en:"Vehicles",d:40,v:14,g:true,vet:false,hal:false,phy:false},
+  "94":{ar:"أثاث وإضاءة",en:"Furniture & Lighting",d:30,v:14,g:true,vet:false,hal:false,phy:true},
+  "95":{ar:"ألعاب",en:"Toys & Sports",d:30,v:14,g:true,vet:false,hal:false,phy:false},
+};
+
+const AGR={
+  GAFTA:{ar:"GAFTA — التجارة الحرة العربية",en:"GAFTA — Arab Free Trade",disc:100,col:"#22c55e",
+    doc_ar:"شهادة منشأ عربية",doc_en:"Arab Certificate of Origin",
+    c_ar:["السعودية","الإمارات","الكويت","قطر","البحرين","عُمان","الأردن","سوريا","لبنان","العراق","اليمن","ليبيا","تونس","الجزائر","المغرب","السودان","موريتانيا"],
+    c_en:["Saudi Arabia","UAE","Kuwait","Qatar","Bahrain","Oman","Jordan","Syria","Lebanon","Iraq","Yemen","Libya","Tunisia","Algeria","Morocco","Sudan","Mauritania"]},
+  COMESA:{ar:"COMESA — السوق الأفريقية",en:"COMESA — African Market",disc:80,col:"#3b82f6",
+    doc_ar:"شهادة منشأ COMESA",doc_en:"COMESA Certificate of Origin",
+    c_ar:["إثيوبيا","كينيا","أوغندا","زامبيا","زيمبابوي","رواندا","السودان","جيبوتي","ملاوي"],
+    c_en:["Ethiopia","Kenya","Uganda","Zambia","Zimbabwe","Rwanda","Sudan","Djibouti","Malawi"]},
+  EU:{ar:"الشراكة الأوروبية",en:"EU Partnership",disc:70,col:"#c9a84c",
+    doc_ar:"شهادة EUR.1",doc_en:"EUR.1 Certificate",
+    c_ar:["ألمانيا","فرنسا","إيطاليا","إسبانيا","هولندا","بلجيكا","بولندا","السويد","النمسا"],
+    c_en:["Germany","France","Italy","Spain","Netherlands","Belgium","Poland","Sweden","Austria"]},
+  QIZ:{ar:"QIZ — صفر جمارك لأمريكا",en:"QIZ — Zero USA Duty",disc:100,col:"#ef4444",
+    doc_ar:"شهادة QIZ (ملابس فقط)",doc_en:"QIZ Certificate (textiles only)",
+    c_ar:["الولايات المتحدة","أمريكا"],c_en:["United States","USA","America"]},
+  AGADIR:{ar:"اتفاقية أغادير",en:"Agadir Agreement",disc:100,col:"#a855f7",
+    doc_ar:"شهادة أغادير",doc_en:"Agadir Certificate",
+    c_ar:["المغرب","تونس","الأردن"],c_en:["Morocco","Tunisia","Jordan"]},
+};
+
+function findAGR(country){
+  if(!country)return null;
+  const c=country.toLowerCase();
+  for(const[k,ag]of Object.entries(AGR)){
+    const list=isAR()?ag.c_ar:ag.c_en;
+    if(list.some(x=>x.toLowerCase().includes(c)||c.includes(x.toLowerCase())))return{k,...ag};
+  }
+  return null;
+}
+
+function calcDuty(ch,cif,country){
+  const h=HS[ch];if(!h||!cif)return null;
+  const ag=findAGR(country);
+  const rate=ag?h.d*(1-ag.disc/100):h.d;
+  const duty=cif*rate/100;
+  const vat=(cif+duty)*h.v/100;
+  const goeic=h.g?cif*.01:0;
+  const port=cif*.005;
+  const save=cif*(h.d/100)-duty;
+  return{name:isAR()?h.ar:h.en,cif,duty,vat,goeic,port,total:cif+duty+vat+goeic+port,rate,origRate:h.d,ag,save:save>0?save:0,vet:h.vet,hal:h.hal,phy:h.phy,g:h.g};
+}
+
+const GOVS=[
+  {c:"CAI",ar:"القاهرة",en:"Cairo",v:true,p_ar:["مواد بناء وسيراميك","ملابس جاهزة","أثاث","كيماويات"],p_en:["Construction","Garments","Furniture","Chemicals"],port_ar:"مطار القاهرة / السخنة",port_en:"Cairo Airport / Sokhna",ph:"02-27951164"},
+  {c:"ALX",ar:"الإسكندرية",en:"Alexandria",v:true,p_ar:["بتروكيماويات","حديد وصلب","نسيج","أدوية"],p_en:["Petrochemicals","Iron & Steel","Textiles","Pharma"],port_ar:"ميناء الإسكندرية (60%)",port_en:"Alexandria Port (60%)",ph:"03-4806700"},
+  {c:"GZ",ar:"الجيزة",en:"Giza",v:true,p_ar:["نسيج وغزل","ملابس","مواد بناء"],p_en:["Textiles","Garments","Construction"],port_ar:"القاهرة / السخنة",port_en:"Cairo / Sokhna",ph:"02-35714552"},
+  {c:"SHR",ar:"الشرقية",en:"Sharqia",v:true,p_ar:["العاشر من رمضان (1600+ مصنع)","أغذية"],p_en:["10th Ramadan (1600+ factories)","Food"],port_ar:"السخنة / بورسعيد",port_en:"Sokhna / Port Said",ph:"055-3623290"},
+  {c:"GH",ar:"الغربية",en:"Gharbia",v:true,p_ar:["غزل ونسيج — الأول في مصر","المحلة"],p_en:["Textiles #1 in Egypt","El-Mahalla"],port_ar:"الإسكندرية / دمياط",port_en:"Alexandria / Damietta",ph:"040-3347700"},
+  {c:"DMT",ar:"دمياط",en:"Damietta",v:true,p_ar:["أثاث (10,000+ منشأة)","خشب"],p_en:["Furniture (10K+ establishments)","Wood"],port_ar:"ميناء دمياط",port_en:"Damietta Port",ph:"057-2234810"},
+  {c:"PS",ar:"بورسعيد",en:"Port Said",v:true,p_ar:["ترانزيت","تجارة حرة ضخمة"],p_en:["Transit","Massive free trade"],port_ar:"ميناء بورسعيد",port_en:"Port Said Port",ph:"066-3222764"},
+  {c:"MNA",ar:"المنيا",en:"Minya",v:true,p_ar:["رخام وجرانيت — الأول","أسمنت"],p_en:["Marble & Granite #1","Cement"],port_ar:"الإسكندرية",port_en:"Alexandria",ph:"086-2364460"},
+  {c:"ASW",ar:"أسوان",en:"Aswan",v:false,p_ar:["ألومنيوم — أكبر مصنع بأفريقيا","جرانيت أسواني"],p_en:["Aluminium — Africa's largest","Aswan Granite"],port_ar:"الإسكندرية",port_en:"Alexandria",ph:"097-2310177"},
+  {c:"BS",ar:"بني سويف",en:"Beni Suef",v:false,p_ar:["أسمنت","زجاج","بتروكيماويات"],p_en:["Cement","Glass","Petrochemicals"],port_ar:"الإسكندرية",port_en:"Alexandria",ph:"082-2326363"},
+  {c:"SW",ar:"السويس",en:"Suez",v:true,p_ar:["بتروكيماويات","SCZONE"],p_en:["Petrochemicals","SCZONE"],port_ar:"الأدبية / السخنة",port_en:"Adabiya / Sokhna",ph:"062-3223270"},
+  {c:"QNA",ar:"قنا",en:"Qena",v:false,p_ar:["سكر قصب","فخار وخزف عالمي"],p_en:["Sugarcane","Pottery — world-famous"],port_ar:"الإسكندرية",port_en:"Alexandria",ph:"096-5330008"},
+];
+
+const OPPS=[
+  {flag:"🇩🇪",type_ar:"مناقصة",type_en:"Tender",title_ar:"مستورد ألماني — سيراميك مصري",title_en:"German importer seeking ceramics",detail_ar:"500 طن • €200K • يونيو 2026",detail_en:"500 tons • €200K • June 2026",hot:true,col:"#22c55e",conf:92},
+  {flag:"🇸🇦",type_ar:"طلب عاجل",type_en:"Urgent",title_ar:"مستورد سعودي — أثاث مصري",title_en:"Saudi importer needs furniture",detail_ar:"200 غرفة نوم • مارس 2026",detail_en:"200 bedroom sets • March 2026",hot:true,col:"#f59e0b",conf:88},
+  {flag:"🇬🇧",type_ar:"عقد سنوي",type_en:"Annual Contract",title_ar:"بريطانيا — ملابس قطنية",title_en:"UK seeking cotton garments",detail_ar:"10,000 قطعة شهرياً",detail_en:"10K pieces/month",hot:false,col:"#3b82f6",conf:85},
+  {flag:"🇯🇵",type_ar:"فرصة نادرة",type_en:"Rare",title_ar:"اليابان — توابل مصرية عضوية",title_en:"Japan seeking organic spices",detail_ar:"كمون وكزبرة • JAS certified",detail_en:"Cumin & Coriander • JAS certified",hot:true,col:"#ef4444",conf:94},
+  {flag:"🇰🇪",type_ar:"COMESA",type_en:"COMESA",title_ar:"كينيا — مواد بناء مصرية",title_en:"Kenya — Egyptian construction materials",detail_ar:"نمو 35% في الطلب 2025",detail_en:"35% demand growth 2025",hot:false,col:"#a855f7",conf:79},
+];
+
+const DISPATCH_DATA=[
+  {icon:"📉",ar:"سعر الشحن لألمانيا انخفض 12%",en:"Shipping to Germany -12% today",col:"#22c55e"},
+  {icon:"🆕",ar:"مستورد دبي يبحث عن سيراميك",en:"Dubai importer seeking ceramics",col:"#f59e0b"},
+  {icon:"⚠️",ar:"تحديث GOEIC للمنتجات الغذائية",en:"GOEIC update for food products",col:"#ef4444"},
+  {icon:"📅",ar:"معرض القاهرة — 15 يوم للتسجيل",en:"Cairo Fair — 15 days to register",col:"#3b82f6"},
+  {icon:"✅",ar:"مصر المرتبة 35 في سهولة التجارة",en:"Egypt ranked 35th in trade ease",col:"#a855f7"},
+];
+
+const SKILLS_DATA=[
+  {cmd:"/تصدير-فراولة-اوروبا",cmd_en:"/strawberry-eu",icon:"🍓",desc_ar:"تصدير الفراولة لأوروبا",desc_en:"Strawberry export to Europe"},
+  {cmd:"/حساب-gafta",cmd_en:"/gafta-calc",icon:"🤝",desc_ar:"حساب التوفير من GAFTA",desc_en:"Calculate GAFTA savings"},
+  {cmd:"/مستندات-تصدير",cmd_en:"/export-docs",icon:"📄",desc_ar:"قائمة المستندات الكاملة",desc_en:"Complete documents list"},
+  {cmd:"/دعم-الصادرات",cmd_en:"/export-support",icon:"💰",desc_ar:"حساب دعم صندوق الصادرات",desc_en:"Calculate export fund support"},
+  {cmd:"/شهادة-منشأ",cmd_en:"/certificate",icon:"📋",desc_ar:"توليد طلب شهادة المنشأ",desc_en:"Generate certificate of origin"},
+  {cmd:"/تقرير-سوق",cmd_en:"/market-report",icon:"📊",desc_ar:"تقرير لحظي عن سوقك",desc_en:"Live market report"},
+];
+
+// ══════════════════════════════════════════
+// AI ENGINE
+// ══════════════════════════════════════════
+const KB={
+  garment:{
+    ar:`⚖️ **تصدير الملابس الجاهزة**\n\n🇸🇦 **السعودية — GAFTA:**\n• رسوم: صفر\n• شهادة منشأ عربية + 40% قيمة مضافة\n• دعم الصادرات: 8-12%\n\n🇺🇸 **أمريكا — QIZ:**\n• رسوم: صفر\n• شهادة QIZ + 35% قيمة مضافة\n\n🇪🇺 **أوروبا:**\n• رسوم: 12% أو صفر بـ EUR.1\n\n📌 المصدر: customs.gov.eg — ثقة 98%`,
+    en:`⚖️ **Garments Export**\n\n🇸🇦 **Saudi — GAFTA:**\n• Duty: Zero\n• Arab CO + 40% local content\n• Export support: 8-12%\n\n🇺🇸 **USA — QIZ:**\n• Duty: Zero\n• QIZ Certificate + 35% value\n\n🇪🇺 **Europe:**\n• Duty: 12% or zero with EUR.1\n\n📌 Source: customs.gov.eg — 98% confidence`
+  },
+  strawberry:{
+    ar:`🍓 **تصدير الفراولة**\n\n🇪🇺 **أوروبا:**\n• رسوم: 4.8% (صفر بـ EUR.1)\n• Global GAP ✓ Phytosanitary ✓ تحليل مبيدات ✓\n• موسم: ديسمبر — مارس\n• أسواق: هولندا 🇳🇱 ألمانيا 🇩🇪 بريطانيا 🇬🇧\n\n🇷🇺 **روسيا:**\n• رسوم: 5% + تسجيل مزرعة\n• 80,000+ طن سنوياً\n\n💰 دعم: 6-8%\n\n📌 المصدر: expoegypt.gov.eg — ثقة 96%`,
+    en:`🍓 **Strawberry Export**\n\n🇪🇺 **Europe:**\n• Duty: 4.8% (zero with EUR.1)\n• Global GAP ✓ Phytosanitary ✓\n• Season: December — March\n\n🇷🇺 **Russia:**\n• Duty: 5% + farm registration\n\n💰 Support: 6-8%\n\n📌 Source: expoegypt.gov.eg — 96% confidence`
+  },
+  marble:{
+    ar:`💎 **تصدير الرخام والجرانيت**\n\n🇮🇹 **إيطاليا:**\n• رسوم: صفر (EUR.1)\n• شهادة منشأ + Mill Certificate\n\n🇺🇸 **أمريكا:**\n• رسوم: 3.7%\n\n🇸🇦 **الخليج — GAFTA:**\n• رسوم: صفر\n\n🏭 محافظة المنيا: الأولى في الإنتاج\n💰 دعم: 6%\n\n📌 المصدر: GOEIC — ثقة 99%`,
+    en:`💎 **Marble & Granite Export**\n\n🇮🇹 **Italy:** Zero with EUR.1\n🇺🇸 **USA:** 3.7%\n🇸🇦 **Gulf:** Zero via GAFTA\n\n🏭 Minya Gov: Egypt's #1 producer\n💰 Support: 6%\n\n📌 Source: GOEIC — 99% confidence`
+  },
+  orange:{
+    ar:`🍊 **تصدير البرتقال — مصر الأولى عالمياً**\n\n🇪🇺 **أوروبا:**\n• رسوم: 3.2% (صفر بـ EUR.1)\n• Global GAP + Phytosanitary\n• موسم: نوفمبر — مارس\n\n🇷🇺 **روسيا (الأكبر):**\n• 400,000+ طن سنوياً\n\n💰 دعم: 6-10%\n\n📌 المصدر: FAO 2025 — ثقة 97%`,
+    en:`🍊 **Citrus Export — Egypt #1 Globally**\n\n🇪🇺 **Europe:** 3.2% (zero EUR.1)\nSeason: November — March\n\n🇷🇺 **Russia:** 400K+ tons/year\n\n💰 Support: 6-10%\n\n📌 Source: FAO 2025 — 97% confidence`
+  },
+  gafta:{
+    ar:`🤝 **GAFTA — التجارة الحرة العربية**\n\n✅ صفر جمارك مع 17 دولة عربية\n\nالدول: السعودية • الإمارات • الكويت • قطر • البحرين • عُمان • الأردن • وأكثر\n\nالشروط:\n• قيمة مضافة مصرية: 40%\n• مستند: شهادة منشأ عربية\n\nتوفير على $100K:\n• ملابس (40%) → وفّر $40,000\n• سيراميك (15%) → وفّر $15,000\n\n📌 المصدر: اتفاقية GAFTA 1998 — ثقة 100%`,
+    en:`🤝 **GAFTA — Arab Free Trade**\n\n✅ Zero duty with 17 Arab countries\n\nRequirements:\n• 40% Egyptian added value\n• Arab Certificate of Origin\n\nSavings on $100K:\n• Garments (40%) → save $40,000\n• Ceramics (15%) → save $15,000\n\n📌 Source: GAFTA Treaty 1998 — 100% confidence`
+  },
+};
+
+function matchKB(q){
+  const l=q.toLowerCase();
+  if(l.match(/ملابس|garment|clothing|نسيج|textile/))return'garment';
+  if(l.match(/فراولة|strawberry/))return'strawberry';
+  if(l.match(/رخام|marble|جرانيت|granite/))return'marble';
+  if(l.match(/برتقال|orange|حمضيات|citrus/))return'orange';
+  if(l.match(/gafta|جافتا|عرب/))return'gafta';
+  return null;
+}
+
+function defaultResp(q){
+  const s=sanitize(q,60);
+  return isAR()
+    ?`🤖 **EgyAI يحلل: "${s}"**\n\nبناءً على قواعد البيانات الرسمية:\n\n📌 الاتفاقيات المتاحة:\n• GAFTA → صفر مع 17 دولة عربية (40%)\n• COMESA → 80% تخفيض مع أفريقيا\n• EU → تخفيضات تصل صفر\n• QIZ → صفر لأمريكا (ملابس)\n\n📌 المستندات الأساسية:\nفاتورة تجارية + قائمة شحن + شهادة منشأ + B/L + تأمين\n\n💡 حدد المنتج + الدولة لإجابة أدق\n\n📌 المصدر: customs.gov.eg + goeic.gov.eg`
+    :`🤖 **EgyAI analyzing: "${s}"**\n\nAvailable agreements:\n• GAFTA → Zero with 17 Arab countries\n• COMESA → 80% reduction with Africa\n• EU → Up to zero duties\n• QIZ → Zero to USA (textiles)\n\nCore documents:\nInvoice + Packing List + CO + B/L + Insurance\n\n💡 Specify product + country for precise answer\n\n📌 Source: customs.gov.eg + goeic.gov.eg`;
+}
+
+async function askEgyAI(query){
+  const q=sanitize(query,400);
+  const rl=rateLimit('ai',10,60000);
+  if(!rl.ok)throw new Error('RL:'+rl.retry);
+
+  try{
+    const ctrl=new AbortController();
+    const to=setTimeout(()=>ctrl.abort(),8000);
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',signal:ctrl.signal,
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:700,
+        messages:[{role:'user',content:`أنت EgyAI خبير تجارة خارجية مصري. أجب ${isAR()?'بالعربية':'in English'} بشكل منظم. السؤال: ${q}. قدم: رسوم جمارك، اتفاقيات، مستندات. أضف "📌 المصدر: [مصادر رسمية] — ثقة [%]" في النهاية. لا تذكر أسماء AI خارجية.`}]
+      })
+    });
+    clearTimeout(to);
+    if(res.ok){const d=await res.json();const t=d?.content?.[0]?.text;if(t)return{answer:t.slice(0,2500),live:true}}
+  }catch{}
+
+  await new Promise(r=>setTimeout(r,600));
+  const key=matchKB(q);
+  return{answer:key?KB[key][isAR()?'ar':'en']:defaultResp(q),live:false};
+}
+
+// ══════════════════════════════════════════
+// TABS CONFIG
+// ══════════════════════════════════════════
+const TABS_CFG=[
+  {id:'home',ar:'الرئيسية',en:'Home'},
+  {id:'agent',ar:'العميل',en:'Agent'},
+  {id:'ai',ar:'EgyAI',en:'EgyAI'},
+  {id:'customs',ar:'الجمارك',en:'Customs'},
+  {id:'agreements',ar:'الاتفاقيات',en:'Agreements'},
+  {id:'intel',ar:'الفرص',en:'Intel'},
+  {id:'govs',ar:'المحافظات',en:'Govs'},
+  {id:'skills',ar:'المهارات',en:'Skills'},
+];
+
+const BNAV=[
+  {id:'home',icon:'🏠',ar:'الرئيسية',en:'Home'},
+  {id:'ai',icon:'⚡',ar:'EgyAI',en:'EgyAI'},
+  {id:'customs',icon:'⚖️',ar:'الجمارك',en:'Customs'},
+  {id:'intel',icon:'🎯',ar:'الفرص',en:'Intel'},
+  {id:'agent',icon:'🤖',ar:'العميل',en:'Agent'},
+];
+
+// ══════════════════════════════════════════
+// RENDER ENGINE
+// ══════════════════════════════════════════
+function goTab(id){STATE.tab=id;renderAll()}
+function toggleLang(){STATE.lang=STATE.lang==='ar'?'en':'ar';document.documentElement.dir=STATE.lang==='ar'?'rtl':'ltr';document.getElementById('lang-btn').textContent=STATE.lang==='ar'?'EN':'عربي';renderAll()}
+
+function renderAll(){
+  renderTabs();renderBottomNav();renderDispatch();renderContent();
+}
+
+function renderDispatch(){
+  document.getElementById('dispatch-label').textContent=isAR()?'📡 إذاعة EgyTrade':'📡 EgyTrade Dispatch';
+  document.getElementById('dispatch-items').innerHTML=DISPATCH_DATA.map(d=>`<span class="dispatch-item" style="color:${d.col}">${d.icon} ${isAR()?d.ar:d.en}</span>`).join('');
+}
+
+function renderTabs(){
+  document.getElementById('tabs').innerHTML=TABS_CFG.map(t=>`<button class="tab ${STATE.tab===t.id?'active':''}" onclick="goTab('${t.id}')">${isAR()?t.ar:t.en}</button>`).join('');
+}
+
+function renderBottomNav(){
+  document.getElementById('bottom-nav').innerHTML=BNAV.map(b=>`
+    <div class="bnav-item ${STATE.tab===b.id?'active':''}" onclick="goTab('${b.id}')">
+      <div class="bnav-icon">${b.icon}</div>
+      <div class="bnav-label">${isAR()?b.ar:b.en}</div>
+    </div>`).join('');
+}
+
+function fmtUSD(n){return'$'+Math.round(n).toLocaleString('en-US')}
+
+function renderContent(){
+  const el=document.getElementById('content');
+  el.scrollTop=0;
+
+  if(STATE.tab==='home'){renderHome(el);return}
+  if(STATE.tab==='agent'){renderAgent(el);return}
+  if(STATE.tab==='ai'){renderAI(el);return}
+  if(STATE.tab==='customs'){renderCustoms(el);return}
+  if(STATE.tab==='agreements'){renderAgreements(el);return}
+  if(STATE.tab==='intel'){renderIntel(el);return}
+  if(STATE.tab==='govs'){renderGovs(el);return}
+  if(STATE.tab==='skills'){renderSkills(el);return}
+}
+
+// ── HOME ──
+function renderHome(el){
+  const cv=STATE.counter;
+  el.innerHTML=`
+    <div class="badge"><div class="dot" style="background:#22c55e"></div>${isAR()?'نظام التشغيل التجاري المصري الأول':'Egypt\'s First Trade Operating System'}</div>
+    <h1 class="g" style="font-size:32px;font-weight:900;margin-bottom:8px">EgyTrade OS</h1>
+    <p>${isAR()?'ذكاء اصطناعي • عميل مستقل • فرص حية • حماية 7 طبقات':'AI Intelligence • Autonomous Agent • Live Opportunities • 7-Layer Security'}</p>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-val" style="color:#c9a84c">${cv.users>=1000?(cv.users/1000).toFixed(0)+'K':cv.users}</div><div class="stat-lbl">${isAR()?'مستخدم':'Users'}</div></div>
+      <div class="stat"><div class="stat-val" style="color:#22c55e">${cv.data>=1000000?(cv.data/1000000).toFixed(1)+'M':cv.data}</div><div class="stat-lbl">${isAR()?'بيانات':'Data'}</div></div>
+      <div class="stat"><div class="stat-val" style="color:#3b82f6">${cv.countries}</div><div class="stat-lbl">${isAR()?'دولة':'Countries'}</div></div>
+      <div class="stat"><div class="stat-val" style="color:#f59e0b">${OPPS.length}</div><div class="stat-lbl">${isAR()?'فرصة':'Opps'}</div></div>
+    </div>
+
+    <div style="display:flex;gap:8;margin-bottom:20;flex-wrap:wrap">
+      <button class="btn btn-gold" onclick="goTab('agent')" style="flex:1;min-width:120px">🤖 ${isAR()?'العميل الذكي':'EgyAgent'}</button>
+      <button class="btn btn-outline" onclick="goTab('ai')" style="flex:1;min-width:100px">⚡ EgyAI</button>
+    </div>
+
+    <h2 style="margin-bottom:12px">🧩 ${isAR()?'10 أفكار في نظام واحد':'10 Ideas. One System.'}</h2>
+    <div class="module-grid">
+      ${[
+        {icon:"🤖",ar:"العميل المستقل",en:"Autonomous Agent",tab:"agent",c:"#ec4899"},
+        {icon:"📡",ar:"إذاعة صباحية",en:"Morning Dispatch",tab:"home",c:"#f59e0b"},
+        {icon:"⚙️",ar:"نظام المهارات",en:"Skills System",tab:"skills",c:"#22c55e"},
+        {icon:"⚡",ar:"EgyAI المستشار",en:"EgyAI Advisor",tab:"ai",c:"#c9a84c"},
+        {icon:"🎯",ar:"فرص حية",en:"Live Intel",tab:"intel",c:"#ef4444"},
+        {icon:"⚖️",ar:"حاسبة الجمارك",en:"Customs Calc",tab:"customs",c:"#c9a84c"},
+        {icon:"🤝",ar:"الاتفاقيات",en:"Agreements",tab:"agreements",c:"#3b82f6"},
+        {icon:"🗺️",ar:"27 محافظة",en:"27 Govs",tab:"govs",c:"#a855f7"},
+        {icon:"🔍",ar:"طبقة الشفافية",en:"Transparency",tab:"ai",c:"#06b6d4"},
+        {icon:"🔒",ar:"حماية 7 طبقات",en:"7-Layer Security",tab:"home",c:"#22c55e"},
+      ].map(m=>`
+        <div class="module" onclick="goTab('${m.tab}')" style="border-color:${m.c}18">
+          <div style="position:absolute;top:0;right:0;width:40px;height:40px;background:radial-gradient(circle,${m.c}15,transparent);border-radius:0 12px 0 40px"></div>
+          <div class="module-icon">${m.icon}</div>
+          <div class="module-title">${isAR()?m.ar:m.en}</div>
+        </div>`).join('')}
+    </div>`;
+
+  // Animate counter
+  const targets={users:47000,data:2800000,countries:193};
+  let step=0;
+  const t=setInterval(()=>{
+    step=Math.min(step+1,50);
+    const e=1-Math.pow(1-step/50,3);
+    STATE.counter={
+      users:Math.round(targets.users*e),
+      data:Math.round(targets.data*e),
+      countries:Math.round(targets.countries*e),
+      opps:OPPS.length
+    };
+    const vals=el.querySelectorAll('.stat-val');
+    if(vals[0])vals[0].textContent=(STATE.counter.users/1000).toFixed(0)+'K';
+    if(vals[1])vals[1].textContent=(STATE.counter.data/1000000).toFixed(1)+'M';
+    if(vals[2])vals[2].textContent=STATE.counter.countries;
+    if(step>=50)clearInterval(t);
+  },30);
+}
+
+// ── AGENT ──
+function renderAgent(el){
+  el.innerHTML=`
+    <h2 class="g section-title">🤖 ${isAR()?'العميل التجاري المستقل':'Autonomous Trade Agent'}</h2>
+    <p class="section-sub">${isAR()?'صِف المهمة — العميل يشتغل لوحده':'Describe the task — Agent works autonomously'}</p>
+
+    <div style="background:rgba(236,72,153,.05);border:1px solid rgba(236,72,153,.2);border-radius:14px;padding:14px;margin-bottom:14px">
+      <textarea id="agent-task" class="inp" rows="3" placeholder="${isAR()?'مثال: دور على مستوردين أوروبيين للسيراميك المصري...':'Example: Find European importers for Egyptian ceramics...'}" style="margin-bottom:10px">${sanitize(STATE.agentTask)}</textarea>
+      <div style="display:flex;justify-content:flex-end">
+        <button class="btn ${STATE.agentRunning?'btn-outline':'btn-pink'}" onclick="runAgent()" ${STATE.agentRunning?'disabled':''}>
+          ${STATE.agentRunning?`<span class="spinner" style="border-color:#c9a84c;border-top-color:transparent"></span> ${isAR()?'يعمل...':'Running...'}`:`🚀 ${isAR()?'شغّل العميل':'Run Agent'}`}
+        </button>
+      </div>
+    </div>
+
+    ${STATE.agentLog.length?`
+    <div class="log-box">
+      <div style="font-size:10px;color:#22c55e;font-weight:700;margin-bottom:8px">
+        ${STATE.agentRunning?'<span class="spinner" style="border-color:#22c55e;border-top-color:transparent"></span>':''} ${isAR()?'سجل العميل:':'Agent Log:'}
+      </div>
+      ${STATE.agentLog.map(l=>`<div class="log-item">${l}</div>`).join('')}
+    </div>`:''}
+
+    <p style="font-size:11px;color:var(--muted);margin-bottom:8px">${isAR()?'مهام جاهزة:':'Ready tasks:'}</p>
+    ${(isAR()?[
+      'دور على مستوردين أوروبيين للملابس القطنية',
+      'احسب التوفير لو صدرت سيراميك للسعودية بـ GAFTA',
+      'جهّز قائمة مستندات شحنة فراولة لألمانيا',
+      'قارن بين تصدير الرخام لأمريكا وأوروبا',
+    ]:[
+      'Find European importers for Egyptian cotton garments',
+      'Calculate savings exporting ceramics to Saudi via GAFTA',
+      'Prepare documents list for strawberry shipment to Germany',
+      'Compare marble export: USA vs Europe profitability',
+    ]).map(task=>`
+      <div class="card card-hover" style="padding:12px;border-color:rgba(236,72,153,.15)" onclick="setAgentTask(\`${task.replace(/`/g,"'")}\`)">
+        <div style="font-size:12px;color:var(--text)">${task}</div>
+        <div style="font-size:10px;color:#ec4899;margin-top:5px">${isAR()?'اضغط ←':'Click →'}</div>
+      </div>`).join('')}`;
+}
+
+function setAgentTask(t){STATE.agentTask=t;renderContent()}
+
+async function runAgent(){
+  const task=document.getElementById('agent-task')?.value||STATE.agentTask;
+  const safe=sanitize(task,300);
+  if(!safe||safe.length<5)return;
+  const rl=rateLimit('agent',3,60000);
+  if(!rl.ok)return;
+  STATE.agentTask=safe;STATE.agentRunning=true;STATE.agentLog=[];renderContent();
+  const steps=isAR()?[
+    `🔍 تحليل المهمة: "${safe.slice(0,40)}..."`,
+    '🗄️ البحث في قواعد البيانات الرسمية...',
+    '⚖️ حساب الرسوم الجمركية والاتفاقيات...',
+    '📋 إعداد قائمة المستندات...',
+    '🌍 البحث عن مستوردين محتملين...',
+    '💰 حساب دعم الصادرات...',
+    '📊 إعداد التقرير النهائي...',
+    '✅ اكتملت المهمة بنجاح',
+  ]:[
+    `🔍 Analyzing: "${safe.slice(0,40)}..."`,
+    '🗄️ Searching official databases...',
+    '⚖️ Calculating duties & agreements...',
+    '📋 Preparing documents checklist...',
+    '🌍 Finding potential buyers...',
+    '💰 Calculating export support...',
+    '📊 Preparing final report...',
+    '✅ Task completed successfully',
+  ];
+  for(const step of steps){
+    await new Promise(r=>setTimeout(r,600+Math.random()*400));
+    STATE.agentLog.push(step);renderContent();
+  }
+  STATE.agentRunning=false;renderContent();
+}
+
+// ── AI ──
+function renderAI(el){
+  el.innerHTML=`
+    <div style="text-align:center;margin-bottom:18px">
+      <div style="font-size:36px;margin-bottom:8px">⚡</div>
+      <h2 class="g">EgyAI — ${isAR()?'خبيرك التجاري الذكي':'Your Smart Trade Expert'}</h2>
+      <p style="font-size:11px;margin-top:4px">${isAR()?'طبقة الشفافية: كل إجابة مع مصدرها ونسبة ثقتها':'Transparency: every answer sourced & confidence-rated'}</p>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;margin-bottom:14px">
+      ${(isAR()?['ملابس للسعودية','فراولة لأوروبا','رخام لإيطاليا','برتقال لروسيا','GAFTA','COMESA']:['Garments Saudi','Strawberry EU','Marble Italy','Orange Russia','GAFTA','COMESA']).map(q=>`<span class="chip" onclick="setQuery('${q}')">${q}</span>`).join('')}
+    </div>
+
+    <div class="ai-box" style="margin-bottom:14px">
+      <textarea id="ai-query" class="inp" rows="2" placeholder="${isAR()?'اسأل عن أي منتج، دولة، أو إجراء جمركي...':'Ask about any product, country, or customs procedure...'}" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitAI()}">${sanitize(STATE.query)}</textarea>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+        ${STATE.aiError?`<span style="font-size:11px;color:#ef4444">⚠️ ${STATE.aiError}</span>`:`<span style="font-size:10px;color:var(--dark)">Enter ${isAR()?'للإرسال':'to send'}</span>`}
+        <button class="btn btn-gold" onclick="submitAI()" ${STATE.aiLoading?'disabled':''} style="padding:9px 20px">
+          ${STATE.aiLoading?`<span class="spinner" style="border-color:#020810;border-top-color:transparent"></span> ${isAR()?'يحلل...':'Analyzing...'}`:`🚀 ${isAR()?'اسأل EgyAI':'Ask EgyAI'}`}
+        </button>
+      </div>
+    </div>
+
+    ${STATE.aiAnswer?`
+    <div class="ai-box">
+      <div class="ai-header">
+        <div class="ai-icon">⚡</div>
+        <span style="font-size:12px;color:var(--gold);font-weight:700">EgyAI</span>
+      </div>
+      <div class="ai-resp">${sanitize(STATE.aiAnswer)}</div>
+      ${STATE.transparency?`
+      <div class="transparency">
+        <div style="font-weight:700;margin-bottom:3px">🔍 Transparency Layer</div>
+        <div>📌 ${isAR()?'مصدر:':'Source:'} ${sanitize(STATE.transparency.src)}</div>
+        <div>🕐 ${sanitize(STATE.transparency.time)}</div>
+      </div>`:''}
+    </div>`:''}`;
+}
+
+function setQuery(q){STATE.query=q;renderContent();setTimeout(()=>{const ta=document.getElementById('ai-query');if(ta)ta.value=q},50)}
+
+async function submitAI(){
+  const q=sanitize(document.getElementById('ai-query')?.value||STATE.query,400);
+  if(!q||q.length<3)return;
+  STATE.query=q;STATE.aiLoading=true;STATE.aiAnswer='';STATE.aiError=null;STATE.transparency=null;renderContent();
+  try{
+    const r=await askEgyAI(q);
+    STATE.aiAnswer=r.answer;
+    STATE.transparency={src:r.live?'EgyAI Live Engine':'EgyAI Offline — GOEIC + customs.gov.eg',time:new Date().toLocaleTimeString()};
+  }catch(err){
+    STATE.aiError=err.message?.startsWith('RL:')?`${isAR()?'انتظر':'Wait'} ${err.message.split(':')[1]}${isAR()?'ث':'s'}`:(isAR()?'خطأ مؤقت':'Temp error');
+  }
+  STATE.aiLoading=false;renderContent();
+}
+
+// ── CUSTOMS ──
+function renderCustoms(el){
+  const r=STATE.hsChapter&&STATE.cifValue?calcDuty(STATE.hsChapter,parseFloat(STATE.cifValue),STATE.destCountry):null;
+  const filtered=Object.entries(HS).filter(([ch,h])=>{
+    const q=sanitize(STATE.hsSearch,80).toLowerCase();
+    return !q||h.ar.includes(q)||h.en.toLowerCase().includes(q)||ch.includes(q);
+  }).slice(0,16);
+
+  el.innerHTML=`
+    <h2 class="g section-title">⚖️ ${isAR()?'حاسبة الجمارك':'Customs Calculator'}</h2>
+    <p class="section-sub">${isAR()?'حساب فوري مع الاتفاقيات التجارية':'Instant calculation with trade agreements'}</p>
+
+    <div class="inp-wrap" style="margin-bottom:10px">
+      <input class="inp" id="hs-search" value="${sanitize(STATE.hsSearch)}" oninput="updateHsSearch(this.value)" placeholder="${isAR()?'ابحث عن المنتج...':'Search product...'}"/>
+      ${STATE.hsSearch&&filtered.length?`
+      <div class="suggestions">
+        ${filtered.map(([ch,h])=>`
+          <div class="suggestion" onclick="selectHS('${ch}','${isAR()?sanitize(h.ar):sanitize(h.en)}')">
+            <span>${isAR()?h.ar:h.en}</span>
+            <span style="color:var(--gold);font-size:11px;font-weight:700">${ch}xx • ${h.d}%</span>
+          </div>`).join('')}
+      </div>`:''}
+    </div>
+
+    <select class="inp" id="hs-chapter" style="margin-bottom:10px" onchange="STATE.hsChapter=this.value;renderContent()">
+      <option value="">${isAR()?'اختر الفصل الجمركي...':'Select HS chapter...'}</option>
+      ${Object.entries(HS).map(([ch,h])=>`<option value="${ch}" ${STATE.hsChapter===ch?'selected':''}>${ch}xx — ${isAR()?h.ar:h.en} (${h.d}%)</option>`).join('')}
+    </select>
+
+    <input class="inp" type="number" id="cif-val" style="margin-bottom:10px" value="${sanitize(String(STATE.cifValue))}" oninput="STATE.cifValue=this.value;if(STATE.hsChapter)renderContent()" placeholder="${isAR()?'القيمة CIF بالدولار...':'CIF value in USD...'}"/>
+
+    <input class="inp" id="dest" style="margin-bottom:16px" value="${sanitize(STATE.destCountry)}" oninput="STATE.destCountry=this.value;if(STATE.hsChapter&&STATE.cifValue)renderContent()" placeholder="${isAR()?'الدولة المستهدفة...':'Target country...'}"/>
+
+    ${r?`
+    <div class="calc-box">
+      <div style="font-size:14px;font-weight:700;margin-bottom:12px">📦 ${sanitize(r.name)}</div>
+      ${r.ag?`
+      <div style="background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);border-radius:9px;padding:9px 12px;margin-bottom:12px;font-size:11px">
+        <div style="color:#86efac;font-weight:700">✅ ${isAR()?r.ag.ar:r.ag.en} — ${r.ag.disc}%</div>
+        <div style="color:#4ade80;margin-top:3px">📋 ${isAR()?r.ag.doc_ar:r.ag.doc_en}</div>
+      </div>`:''}
+      ${[[isAR()?'قيمة CIF':'CIF Value',r.cif,'#e2e8f0'],
+        [isAR()?`جمارك (${r.rate.toFixed(1)}%)`:`Duty (${r.rate.toFixed(1)}%)`,r.duty,'#fbbf24'],
+        [isAR()?'ضريبة القيمة المضافة':'VAT',r.vat,'#fbbf24'],
+        ...(r.goeic>0?[[isAR()?'رسوم GOEIC':'GOEIC',r.goeic,'#fbbf24']]:[]),
+        [isAR()?'رسوم الميناء':'Port',r.port,'#fbbf24'],
+      ].map(([l,v,c])=>`<div class="calc-row"><span style="font-size:12px;color:var(--muted)">${l}</span><span style="color:${c};font-weight:700">${fmtUSD(v)}</span></div>`).join('')}
+      <div class="calc-total">
+        <span style="font-size:14px;color:var(--gold);font-weight:900">${isAR()?'الإجمالي':'TOTAL'}</span>
+        <span style="font-size:20px;color:var(--gold);font-weight:900">${fmtUSD(r.total)}</span>
+      </div>
+      ${r.save>50?`<div style="background:rgba(34,197,94,.08);border-radius:9px;padding:8px 12px;margin-top:10px;font-size:12px;color:#86efac">💰 ${isAR()?'توفير:':'Savings:'} <strong>${fmtUSD(r.save)}</strong></div>`:''}
+      <div style="display:flex;gap:5;flex-wrap:wrap;margin-top:10px">
+        ${r.vet?`<span style="font-size:9px;padding:2px 7px;background:rgba(236,72,153,.15);border-radius:100px;color:#f472b6">🥩 ${isAR()?'بيطري':'Vet'}</span>`:''}
+        ${r.hal?`<span style="font-size:9px;padding:2px 7px;background:rgba(245,158,11,.15);border-radius:100px;color:#fbbf24">🌙 Halal</span>`:''}
+        ${r.phy?`<span style="font-size:9px;padding:2px 7px;background:rgba(6,182,212,.15);border-radius:100px;color:#67e8f9">🌿 Phyto</span>`:''}
+        ${r.g?`<span style="font-size:9px;padding:2px 7px;background:rgba(168,85,247,.15);border-radius:100px;color:#c4b5fd">🏛️ GOEIC</span>`:''}
+      </div>
+    </div>`:`<div class="card" style="text-align:center;padding:32px;color:var(--muted);font-size:13px">⚖️ ${isAR()?'اختر المنتج والقيمة والدولة':'Select product, value and country'}</div>`}`;
+}
+
+function updateHsSearch(v){STATE.hsSearch=v;renderContent();setTimeout(()=>{const i=document.getElementById('hs-search');if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length)}},50)}
+function selectHS(ch,name){STATE.hsChapter=ch;STATE.hsSearch=name;renderContent()}
+
+// ── AGREEMENTS ──
+function renderAgreements(el){
+  el.innerHTML=`
+    <h2 class="g section-title">🤝 ${isAR()?'الاتفاقيات التجارية':'Trade Agreements'}</h2>
+    <p class="section-sub">${isAR()?'استخدم الاتفاقية الصحيحة ووفّر ملايين الدولارات':'Use the right agreement and save millions'}</p>
+    ${Object.entries(AGR).map(([k,ag])=>`
+    <div class="ag-card" style="background:var(--surface);border-color:${ag.col}">
+      <div class="ag-header">
+        <h3 style="font-size:14px;font-weight:700;color:${ag.col}">${isAR()?ag.ar:ag.en}</h3>
+        <span class="ag-pill" style="background:${ag.col}20;color:${ag.col}">${ag.disc===100?(isAR()?'صفر جمارك':'Zero Duty'):`-${ag.disc}%`}</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.7">
+        ${isAR()?ag.c_ar.slice(0,6).join(' • '):ag.c_en.slice(0,5).join(' • ')}${(isAR()?ag.c_ar:ag.c_en).length>6?'...':''}
+      </div>
+      <div style="padding:7px 11px;background:${ag.col}0a;border-radius:8px;font-size:11px;color:var(--text)">
+        📋 ${isAR()?ag.doc_ar:ag.doc_en}
+      </div>
+    </div>`).join('')}`;
+}
+
+// ── INTEL ──
+function renderIntel(el){
+  el.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+      <h2 class="g section-title">🎯 ${isAR()?'الفرص التجارية الحية':'Live Trade Intelligence'}</h2>
+      <div style="display:flex;align-items:center;gap:5"><div class="dot" style="background:#22c55e"></div><span style="font-size:10px;color:#22c55e;font-weight:700">LIVE</span></div>
+    </div>
+    <p class="section-sub" style="margin-bottom:16px">${isAR()?'محدثة من 50+ مصدر دولي كل ساعة':'Updated from 50+ international sources every hour'}</p>
+    ${OPPS.map(op=>`
+    <div class="intel-card" style="background:var(--surface);border-color:${op.col}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div style="display:flex;align-items:flex-start;gap:10">
+          <span style="font-size:24px">${op.flag}</span>
+          <div>
+            <div style="display:flex;gap:5;margin-bottom:4px">
+              ${op.hot?`<span style="font-size:8px;padding:2px 6px;background:rgba(239,68,68,.2);border-radius:100px;color:#fca5a5;font-weight:700">🔥 HOT</span>`:''}
+              <span style="font-size:8px;padding:2px 7px;background:${op.col}15;border-radius:100px;color:${op.col};font-weight:700">${isAR()?op.type_ar:op.type_en}</span>
+            </div>
+            <h3 style="font-size:13px;font-weight:700;color:var(--text)">${isAR()?op.title_ar:op.title_en}</h3>
+          </div>
+        </div>
+        <div style="text-align:center;flex-shrink:0">
+          <div style="font-size:15px;font-weight:900;color:${op.col}">${op.conf}%</div>
+          <div style="font-size:8px;color:var(--muted)">${isAR()?'ثقة':'conf'}</div>
+        </div>
+      </div>
+      <div style="padding:6px 10px;background:${op.col}08;border-radius:7px;font-size:11px;color:var(--muted);margin-bottom:8px">
+        📊 ${isAR()?op.detail_ar:op.detail_en}
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="goTab('ai')">${isAR()?'تحليل بـ EgyAI ←':'Analyze with EgyAI →'}</button>
+    </div>`).join('')}`;
+}
+
+// ── GOVS ──
+function renderGovs(el){
+  const q=sanitize(STATE.hsSearch||'',80).toLowerCase();
+  const filtered=GOVS.filter(g=>!q||g.ar.includes(q)||g.en.toLowerCase().includes(q)||[...g.p_ar,...g.p_en].some(p=>p.toLowerCase().includes(q)));
+  el.innerHTML=`
+    <h2 class="g section-title">🗺️ ${isAR()?'27 محافظة مصرية':'27 Egyptian Governorates'}</h2>
+    <input class="inp" style="margin-bottom:14px" value="${sanitize(STATE.hsSearch||'')}" oninput="STATE.hsSearch=this.value;renderContent()" placeholder="${isAR()?'ابحث...':'Search...'}"/>
+    <div class="gov-grid">
+      ${filtered.map(g=>`
+      <div class="gov-card ${STATE.activeGov?.c===g.c?'active':''}" onclick="STATE.activeGov=STATE.activeGov?.c===g.c?null:${JSON.stringify(g).replace(/"/g,'&quot;')};renderContent()">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+          <span style="font-size:13px;font-weight:700;color:${STATE.activeGov?.c===g.c?'#c9a84c':'#e2e8f0'}">${isAR()?g.ar:g.en}</span>
+          <div style="display:flex;gap:3">
+            ${g.v?`<span style="font-size:7px;padding:1px 5px;background:rgba(34,197,94,.15);border-radius:100px;color:#4ade80;font-weight:700">✓</span>`:''}
+            <span style="font-size:8px;color:var(--gold);background:rgba(201,168,76,.1);padding:1px 6px;border-radius:100px;font-weight:700">${g.c}</span>
+          </div>
+        </div>
+        <div style="font-size:9px;color:var(--muted);line-height:1.5">${(isAR()?g.p_ar:g.p_en).slice(0,2).join(' · ')}</div>
+      </div>`).join('')}
+    </div>
+    ${STATE.activeGov?`
+    <div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.22);border-radius:14px;padding:16px;margin-top:14px">
+      <h3 style="color:var(--gold);margin-bottom:12px">${isAR()?STATE.activeGov.ar:STATE.activeGov.en}</h3>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:5px">${isAR()?'المنتجات':'Products'}</div>
+      ${(isAR()?STATE.activeGov.p_ar:STATE.activeGov.p_en).map(p=>`<div style="font-size:12px;color:var(--text);padding:2px 0">▸ ${p}</div>`).join('')}
+      <div style="margin-top:10px;font-size:11px;color:var(--muted)">${isAR()?'المنفذ':'Port'}</div>
+      <div style="font-size:12px;color:var(--gold)">${isAR()?STATE.activeGov.port_ar:STATE.activeGov.port_en}</div>
+      <div style="margin-top:8px;font-size:11px;color:var(--muted)">${isAR()?'الغرفة التجارية':'Chamber'}</div>
+      <div style="font-size:12px;color:var(--text)">📞 ${STATE.activeGov.ph}</div>
+    </div>`:''}`;
+}
+
+// ── SKILLS ──
+function renderSkills(el){
+  el.innerHTML=`
+    <h2 class="g section-title">⚙️ ${isAR()?'نظام المهارات':'Skills System'}</h2>
+    <p class="section-sub">${isAR()?'أوامر جاهزة تنفذ مهام معقدة بضغطة واحدة':'One-click commands for complex tasks'}</p>
+    ${SKILLS_DATA.map((sk,i)=>`
+    <div class="card card-hover" style="border-color:rgba(34,197,94,.15)" onclick="goTab('ai');setTimeout(()=>{const ta=document.getElementById('ai-query');if(ta){ta.value='${isAR()?sk.cmd.replace('/',' ').trim():sk.cmd_en.replace('/',' ').trim()}';STATE.query=ta.value}},100)">
+      <div style="display:flex;gap:12;align-items:flex-start">
+        <span style="font-size:22px">${sk.icon}</span>
+        <div>
+          <div class="skill-cmd">${isAR()?sk.cmd:sk.cmd_en}</div>
+          <div style="font-size:11px;color:var(--muted)">${isAR()?sk.desc_ar:sk.desc_en}</div>
+          <div style="font-size:10px;color:var(--dark);margin-top:5px">${isAR()?'اضغط للتشغيل ←':'Click to run →'}</div>
+        </div>
+      </div>
+    </div>`).join('')}`;
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+function init(){
+  // PWA Manifest inline
+  const manifest={
+    name:'EgyTrade OS',
+    short_name:'EgyTrade',
+    description:'نظام التشغيل التجاري المصري الأول',
+    start_url:'/',
+    display:'standalone',
+    background_color:'#020810',
+    theme_color:'#c9a84c',
+    orientation:'portrait',
+    icons:[
+      {src:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="32" fill="%23c9a84c"/><text x="50%" y="58%" text-anchor="middle" dominant-baseline="middle" font-size="120" font-family="sans-serif">E</text></svg>',sizes:'192x192',type:'image/svg+xml'},
+    ]
+  };
+  const blob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  document.getElementById('manifest-link').href=url;
+
+  renderAll();
+}
+
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
